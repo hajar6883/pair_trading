@@ -1,5 +1,6 @@
 import numpy as np 
 from math import pi 
+import random
 
 class OUProcess:
     """
@@ -13,7 +14,9 @@ class OUProcess:
 
     def _log_likelihood(self,X, params, dt ):
         """
-        X : sequence of raw residuals between the pair  X_t = log(P_A,t) - β * log(P_B,t) """
+        X : sequence of raw residuals between the pair  X_t = log(P_A,t) - β * log(P_B,t)
+         for MLE via numerical optimization purposes """
+        
         phi = np.exp(-params['kappa']*dt)
         var = params['sigma_tilde']**2
         mu = params['mu']
@@ -67,7 +70,17 @@ class OUProcess:
 
     def simulate(self, n_steps, x0=None, dt=1.0):
         # Euler-Maruyama discretisation — useful for sanity checking your fit
-        pass
+        x0 = self.mu if x0 is None else x0
+        path = np.zeros(n_steps)
+        path[0] = x0
+        for t in range(1, n_steps):
+            path[t] = path[t-1] + self.kappa*(self.mu - path[t-1])*dt + self.sigma*np.sqrt(dt)*np.random.normal()
+        return path
+
+
+
+
+        
 
 
 
