@@ -10,7 +10,7 @@ import pandas as pd
 
 
 
-def backtest(spread, positions, tc=0.001):
+def in_sample_backtest(spread, positions, tc=0.001):
     """
     spread    : pd.Series — log spread
     positions : pd.Series — +1, -1, 0
@@ -42,19 +42,19 @@ def backtest(spread, positions, tc=0.001):
 
 
 
-if __name__ == '__main__':
-    data    = fetch_2tick('XOM', 'CVX', '2020-01-01', '2026-01-01')
-    spread  = compute_pair_spread(data)
+# if __name__ == '__main__':
+#     data    = fetch_2tick('XOM', 'CVX', '2020-01-01', '2026-01-01')
+#     spread  = compute_pair_spread(data)
 
-    ou = OUProcess()
-    ou.fit(spread.values)
-    zscores   = ou.zscore(spread.values)
-    zscores   = pd.Series(zscores, index=spread.index)
+#     ou = OUProcess()
+#     ou.fit(spread.values)
+#     zscores   = ou.zscore(spread.values)
+#     zscores   = pd.Series(zscores, index=spread.index)
 
-    positions = generate_signals(zscores)
-    results   = backtest(spread, positions, tc=0.001)
+#     positions = generate_signals(zscores)
+#     results   = in_sample_backtest(spread, positions, tc=0.001)
 
-    print(f"\nOU params — kappa: {ou.kappa:.4f}  mu: {ou.mu:.4f}  sigma: {ou.sigma:.4f}")
-    print(f"Half-life: {ou.half_life():.1f} days\n")
-    compute_metrics(results)
-    plot_results(results, title='XOM/CVX Pairs Trading')
+#     print(f"\nOU params — kappa: {ou.kappa:.4f}  mu: {ou.mu:.4f}  sigma: {ou.sigma:.4f}")
+#     print(f"Half-life: {ou.half_life():.1f} days\n")
+#     compute_metrics(results)
+#     plot_results(results, title='XOM/CVX Pairs Trading')
