@@ -1,6 +1,7 @@
 
 import yfinance as yf
 import numpy as np
+from spread.hedge_ratio import *
 
 def fetch_2tick(ticker_1, ticker_2, start_date, end_date):
     "pull daily closes for two tickers via yfinance "
@@ -9,13 +10,17 @@ def fetch_2tick(ticker_1, ticker_2, start_date, end_date):
     return data
     
 
-def compute_pair_spread(data):
+
+def compute_pair_spread(data, method="ols"):
     """pandas.series of the the pair of stock  in question """
     
     log_prices = np.log(data)
     P = log_prices.iloc[:, 0] #first tick..
     Q = log_prices.iloc[:, 1]
-    beta  = np.cov(P, Q)[0,1]/np.var(Q)
-    X =  P- beta*Q
+    if method =="ols":
+        beta = ols_hedge_ratio(P,Q) 
+    if method == 'tls':
+        beta = tls_hedge_ratio(P,Q)
+    X =  P - beta*Q
     return X 
 
