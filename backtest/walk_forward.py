@@ -6,7 +6,8 @@ import pandas as pd
 from spread.OU_process import OUProcess
 from signals.signal import generate_signals
 
-def walk_forward_backtest(spread, train_window = 252, test_window = 63, window = 'rolling', tc= .001):
+def walk_forward_backtest(spread, train_window=252, test_window=63, window='rolling', tc=.001,
+                          min_halflife=5, max_halflife=150, adf_thresh=0.05):
     n= len(spread)
 
     all_results = []
@@ -28,12 +29,12 @@ def walk_forward_backtest(spread, train_window = 252, test_window = 63, window =
             continue
 
         hl = ou_temp.half_life()
-        if hl < 5 or hl > 150:
+        if hl < min_halflife or hl > max_halflife:
             continue
 
         from statsmodels.tsa.stattools import adfuller
         adf_pvalue = adfuller(train_slice)[1]
-        if adf_pvalue > 0.05:  
+        if adf_pvalue > adf_thresh:
             continue
 
         
@@ -54,6 +55,7 @@ def walk_forward_backtest(spread, train_window = 252, test_window = 63, window =
         })
 
         all_results.append(results)
+        
     res = pd.concat(all_results)
     res['equity'] = res['net_pnl'].cumsum()
     return res

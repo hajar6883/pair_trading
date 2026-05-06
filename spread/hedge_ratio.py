@@ -5,9 +5,9 @@ def ols_hedge_ratio(P,Q):
 
 def tls_hedge_ratio (P,Q):
     P_c = P.values - P.mean()
-    Q_c = Q.values - P.mean()
+    Q_c = Q.values - Q.mean()
 
     cov = np.cov(P_c, Q_c) 
-    _, eigenvactors = np.linalg.eig(cov)
+    _, eigenvactors = np.linalg.eigh(cov)
     v = eigenvactors[:,0] # minimize orthogonal distance instead of vertical residuals 
     return -v[0] / v[1] #symetrical ! 

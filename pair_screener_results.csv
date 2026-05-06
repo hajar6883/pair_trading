@@ -1,0 +1,3 @@
+sector,ticker_1,ticker_2,beta,coint_pval,adf_pval,half_life_days,hurst,zscore_now
+US Banks,WFC,JPM,0.9628,0.0338,0.0086,20.7,0.398,-1.927
+Euro Banks,UCG.MI,ISP.MI,1.2204,0.038,0.0032,16.2,0.327,-0.012

@@ -12,9 +12,10 @@ from backtest.engine import in_sample_backtest
 from backtest.walk_forward import walk_forward_backtest
 from evaluation.metrics import compute_metrics
 
+ticker_1, ticker_2 =  'UCG.MI','ISP.MI'
+start_date , end_date =  '2023-01-01', '2026-01-01'
 
-# data   = fetch_2tick('XOM', 'CVX', '2020-01-01', '2026-01-01')
-data = fetch_2tick('LQD','HYG', '2020-01-01', '2026-01-01')
+data   = fetch_2tick(ticker_1, ticker_2,start_date , end_date)
 spread = compute_pair_spread(data)
 
 ou = OUProcess()
@@ -26,7 +27,7 @@ is_results = in_sample_backtest(spread, positions, tc=0.001)
 print("── IN-SAMPLE ──────────────────────────────")
 compute_metrics(is_results)
 
-wf_results = walk_forward_backtest(spread, train_window=252, test_window=63)
+wf_results = walk_forward_backtest(spread, train_window=126, test_window=21)
 
 print("\n── WALK-FORWARD (out-of-sample) ───────────────────────────────────")
 compute_metrics(wf_results)
@@ -53,8 +54,4 @@ for col in [1, 2]:
 
 fig.update_layout(
     template='plotly_dark',
-    title='LQD/HYG — In-Sample vs Walk-Forward Equity',
-    height=450
-)
-
-fig.show()
+    title=f"{ticker_1}/{ticker_2} — In-Sample vs Walk-F
