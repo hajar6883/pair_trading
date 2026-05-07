@@ -103,4 +103,39 @@ fig.add_trace(go.Scatter(
     line=dict(color='#f77f00', width=1.5)
 ), row=1, col=1)
 
-fig.add_trace(go.Scatte
+fig.add_trace(go.Scatter(
+    x=wf_tls.index, y=wf_tls['equity'],
+    mode='lines', name='TLS (symmetric static)',
+    line=dict(color='#06d6a0', width=1.5)
+), row=1, col=1)
+
+fig.add_trace(go.Scatter(
+    x=wf_kalman.index, y=wf_kalman['equity'],
+    mode='lines', name='Kalman (time-varying)',
+    line=dict(color='#00b4d8', width=1.5)
+), row=1, col=1)
+
+fig.add_hline(y=0, line_color='white', line_dash='dot', row=1, col=1)
+
+# Beta over time
+fig.add_trace(go.Scatter(
+    x=kalman_beta.index, y=kalman_beta,
+    mode='lines', name='Kalman β',
+    line=dict(color='#00b4d8', width=1.5)
+), row=2, col=1)
+
+fig.add_hline(y=ols_beta, line_color='#f77f00', line_dash='dash',
+              annotation_text=f'OLS β = {ols_beta:.3f}',
+              annotation_position='right', row=2, col=1)
+
+fig.add_hline(y=tls_beta, line_color='#06d6a0', line_dash='dash',
+              annotation_text=f'TLS β = {tls_beta:.3f}',
+              annotation_position='right', row=2, col=1)
+
+fig.update_layout(
+    template='plotly_dark',
+    height=700,
+    title=f'{TICKER_1}/{TICKER_2} — Hedge Ratio Method Comparison',
+)
+
+fig.show()

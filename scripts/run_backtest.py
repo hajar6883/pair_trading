@@ -54,4 +54,8 @@ for col in [1, 2]:
 
 fig.update_layout(
     template='plotly_dark',
-    title=f"{ticker_1}/{ticker_2} — In-Sample vs Walk-F
+    title=f"{ticker_1}/{ticker_2} — In-Sample vs Walk-Forward Equity",
+    height=450
+)
+
+fig.show()
