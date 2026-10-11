@@ -1,14 +1,17 @@
 import numpy as np
 
 
-def compute_metrics(results, risk_free_annual=0.04):
-    """Print and return a summary of strategy performance."""
+def compute_metrics(results, risk_free_annual=0.0, verbose=True):
+    """Print and return a summary of strategy performance.
+
+    P&L is in log-return units of a self-financing long/short spread, so no
+    risk-free rate is subtracted by default."""
     pnl    = results['net_pnl'].dropna()
     equity = results['equity'].dropna()
 
     # Sharpe (annualised, 252 trading days)
     rf_daily = risk_free_annual / 252
-    sharpe = ((pnl.mean() - rf_daily) / pnl.std()) * np.sqrt(252)
+    sharpe = ((pnl.mean() - rf_daily) / pnl.std()) * np.sqrt(252) if pnl.std() > 0 else np.nan
 
     # max drawdown
     running_max = equity.cummax()
@@ -32,6 +35,12 @@ def compute_metrics(results, risk_free_annual=0.04):
             wins += 1
     win_rate = wins / n_trades if n_trades > 0 else 0
 
+    if not verbose:
+        return {
+            'sharpe': sharpe, 'max_drawdown': max_dd, 'total_pnl': equity.iloc[-1],
+            'n_trades': n_trades, 'avg_holding': avg_hold, 'win_rate': win_rate
+        }
+
     print(f"{'Sharpe ratio':<25} {sharpe:.3f}")
     print(f"{'Max drawdown':<25} {max_dd:.5f}")
     print(f"{'Total P&L':<25} {equity.iloc[-1]:.5f}")
@@ -40,7 +49,7 @@ def compute_metrics(results, risk_free_annual=0.04):
     print(f"{'Win rate':<25} {win_rate:.1%}")
 
     return {
-        'sharpe': sharpe, 'max_drawdown': max_dd,
+        'sharpe': sharpe, 'max_drawdown': max_dd, 'total_pnl': equity.iloc[-1],
         'n_trades': n_trades, 'avg_holding': avg_hold,
         'win_rate': win_rate
     }

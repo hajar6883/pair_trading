@@ -32,7 +32,8 @@ class OUProcess:
         """OLS
         X : observed historical residuals 
         dt=1 for daily setting , change if using intraday data"""
-        
+
+        X = np.asarray(X, dtype=float)   # pd.Series would align X[1:] / X[:-1] by index
         T = len(X) * dt
         Xt = X[1:]
         Xtm1 = X[:-1]

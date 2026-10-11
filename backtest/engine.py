@@ -22,7 +22,7 @@ def in_sample_backtest(spread, positions, tc=0.001):
 
     raw_pnl = positions.shift(1) * delta_spread
 
-    costs = positions.diff().abs()* tc     # cost paid whenever position changes
+    costs = positions.diff().fillna(positions.iloc[0]).abs() * tc     # cost paid whenever position changes
 
 
     net_pnl = raw_pnl - costs

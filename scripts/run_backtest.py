@@ -1,6 +1,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -27,7 +28,9 @@ is_results = in_sample_backtest(spread, positions, tc=0.001)
 print("── IN-SAMPLE ──────────────────────────────")
 compute_metrics(is_results)
 
-wf_results = walk_forward_backtest(spread, train_window=126, test_window=21)
+log_prices = np.log(data)
+wf_results = walk_forward_backtest(log_prices.iloc[:, 0], log_prices.iloc[:, 1], hedge='ols',
+                                   train_window=126, test_window=21)
 
 print("\n── WALK-FORWARD (out-of-sample) ───────────────────────────────────")
 compute_metrics(wf_results)

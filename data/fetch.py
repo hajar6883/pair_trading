@@ -7,7 +7,7 @@ def fetch_2tick(ticker_1, ticker_2, start_date, end_date):
     "pull daily closes for two tickers via yfinance "
 
     data = yf.download([ticker_1, ticker_2], start = start_date, end= end_date,interval='1d', group_by = 'column')['Close']
-    return data
+    return data[[ticker_1, ticker_2]]   # yfinance sorts columns alphabetically
     
 
 
